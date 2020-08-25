@@ -1,0 +1,69 @@
+author: Aleksey Kotelnikov
+description: Mongoose OS empty boilerplate
+version: 1
+
+libs_version: ${mos.version}
+modules_version: ${mos.version}
+mongoose_os_version: ${mos.version}
+manifest_version: 2020-01-29
+
+tags:
+  - mgos
+  - boilerplate
+  - c
+  - js
+
+includes:
+  - include
+
+sources:
+  - src
+
+filesystem:
+  - fs
+
+libs:
+  - origin: https://github.com/mongoose-os-libs/core
+  - origin: https://github.com/mongoose-os-libs/boards
+  - origin: https://github.com/mongoose-os-libs/rpc-uart
+  - origin: https://github.com/mongoose-os-libs/rpc-service-config
+  - origin: https://github.com/mongoose-os-libs/rpc-service-fs
+  - origin: https://github.com/mongoose-os-libs/rpc-service-ota
+  - origin: https://github.com/mongoose-os-libs/wifi
+  - origin: https://github.com/mongoose-os-libs/ca-bundle
+  - origin: https://github.com/mongoose-os-libs/dash
+  - origin: https://github.com/mongoose-os-libs/mjs
+  #- origin: https://github.com/mongoose-os-libs/mqtt
+  #- origin: https://github.com/mongoose-os-libs/sntp
+
+config_schema:
+  ### ->> APP OBJECT <-- ###
+  - ["app", 				              "o", 						  {title: "Application settings object"}]
+  - ["app.mem_slot", 		          "s", 	"", 				{title: "String for storing some JSON data"}]
+  
+  ### ->> WIFI <-- ###
+  - ["wifi.ap.enable", false]
+  - ["wifi.ap.ssid", "mos_??????"]
+  - ["wifi.ap.pass", "1234567890"]
+
+  - ["wifi.sta.enable", false]
+  - ["wifi.sta.ssid", "your_network_ssid"]
+  - ["wifi.sta.pass", "your_network_secret"]
+
+  ### ->> DASH <-- ###
+  - ["dash.enable", false]
+  - ["dash.token", "your_dash_token"]
+
+  ### ->> MQTT <-- ###
+  #- ["mqtt.enable", false]
+  #- ["mqtt.server", "mqtt.eclipse.org:1883"]
+  #- ["mqtt.client_id", "your_uniq_mqtt_id"]
+  #- ["mqtt.user", "your_mqtt_user"]
+  #- ["mqtt.pass", "your_mqtt_secret"]
+  # ->> If you want to use SSL uncomment lines below and 
+  # -->> also change port for server in mqtt.server section
+  #- ["mqtt.ssl_ca_cert","ca.pem"]
+  
+  ### ->> SNTP <-- ###
+  #- ["sntp.server", "ntp2.stratum2.ru"]
+  #- ["sys.tz_spec", "MSK-3"]
