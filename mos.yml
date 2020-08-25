@@ -38,8 +38,8 @@ libs:
 
 config_schema:
   ### ->> APP OBJECT <-- ###
-  - ["app", 				              "o", 						  {title: "Application settings object"}]
-  - ["app.mem_slot", 		          "s", 	"", 				{title: "String for storing some JSON data"}]
+  - ["app", "o", {title: "Application settings object"}]
+  - ["app.mem_slot", "s", "", {title: "String for storing some JSON data"}]
   
   ### ->> WIFI <-- ###
   - ["wifi.ap.enable", false]
