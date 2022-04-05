@@ -1,5 +1,5 @@
-author: Aleksey Kotelnikov
-description: Mongoose OS Initial project skeleton
+author: Author Name <your@email.here>
+description: Your App description 
 version: 1.0
 
 libs_version: ${mos.version}
