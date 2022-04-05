@@ -1,5 +1,5 @@
 author: Aleksey Kotelnikov
-description: Mongoose OS empty boilerplate
+description: Mongoose OS Initial project skeleton
 version: 1.0
 
 libs_version: ${mos.version}
