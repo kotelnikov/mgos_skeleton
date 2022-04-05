@@ -1,10 +1,17 @@
 author: Aleksey Kotelnikov
 description: Mongoose OS empty boilerplate
-version: 1
+version: 1.0
 
 libs_version: ${mos.version}
 modules_version: ${mos.version}
 mongoose_os_version: ${mos.version}
+
+# There is some issues when ESP8266 fails with mJS library using Mongoose OS 2.20.0
+# In this case it's better to use Mongoose OS 2.19.1 (previous release)
+#libs_version: 2.19.1
+#modules_version: 2.19.1
+#mongoose_os_version: 2.19.1
+
 manifest_version: 2020-01-29
 
 tags:
@@ -12,6 +19,30 @@ tags:
   - boilerplate
   - c
   - js
+
+### In case of some extra build variables needed
+#build_vars:
+  
+  ### In case of some SDK extra variables needed
+  #ESP_IDF_SDKCONFIG_OPTS: >
+    #${build_vars.ESP_IDF_SDKCONFIG_OPTS}
+      
+      ### In case of an SPIRAM installed on to your MCU
+      #CONFIG_SPIRAM_SUPPORT=y
+      #CONFIG_SPIRAM_BOOT_INIT=y
+      #CONFIG_SPIRAM_CACHE_WORKAROUND=y
+      #CONFIG_SPI_MASTER_IN_IRAM=y
+  
+      ### In case of an extra FLASH installed on to your MCU
+      ### If it's 8Mb FLASH
+      #CONFIG_ESPTOOLPY_FLASHSIZE_4MB=
+      #CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+      #CONFIG_ESPTOOLPY_FLASHSIZE=8MB
+
+      ### If it's 16Mb FLASH
+      #CONFIG_ESPTOOLPY_FLASHSIZE_4MB=
+      #CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
+      #CONFIG_ESPTOOLPY_FLASHSIZE=16MB
 
 includes:
   - include
@@ -23,36 +54,57 @@ filesystem:
   - fs
 
 libs:
-  - origin: https://github.com/mongoose-os-libs/core
-  - origin: https://github.com/mongoose-os-libs/boards
-  - origin: https://github.com/mongoose-os-libs/rpc-uart
-  - origin: https://github.com/mongoose-os-libs/rpc-service-config
-  - origin: https://github.com/mongoose-os-libs/rpc-service-fs
-  - origin: https://github.com/mongoose-os-libs/rpc-service-ota
-  - origin: https://github.com/mongoose-os-libs/wifi
-  - origin: https://github.com/mongoose-os-libs/ca-bundle
-  - origin: https://github.com/mongoose-os-libs/dash
-  - origin: https://github.com/mongoose-os-libs/mjs
-  #- origin: https://github.com/mongoose-os-libs/mqtt
-  #- origin: https://github.com/mongoose-os-libs/sntp
+  ### ->> REMOTE LIBS <-- ###
+  - location: https://github.com/mongoose-os-libs/core
+  - location: https://github.com/mongoose-os-libs/boards
+  - location: https://github.com/mongoose-os-libs/rpc-uart
+  - location: https://github.com/mongoose-os-libs/rpc-service-config
+  - location: https://github.com/mongoose-os-libs/rpc-service-fs
+  - location: https://github.com/mongoose-os-libs/rpc-service-ota
+  - location: https://github.com/mongoose-os-libs/wifi
+  - location: https://github.com/mongoose-os-libs/ca-bundle
+  - location: https://github.com/mongoose-os-libs/mjs
+  #- location: https://github.com/mongoose-os-libs/pppos
+  #- location: https://github.com/mongoose-os-libs/dash
+  #- location: https://github.com/mongoose-os-libs/sntp  
+  #- location: https://github.com/mongoose-os-libs/mqtt
+
+  ### ->> LOCAL LIBS <-- ###
+  #- location: lib-folder/lib-name
 
 config_schema:
   ### ->> APP OBJECT <-- ###
   - ["app", "o", {title: "Application settings object"}]
   - ["app.mem_slot", "s", "", {title: "String for storing some JSON data"}]
   
-  ### ->> WIFI <-- ###
+  ### ->> WIFI AP <-- ###
   - ["wifi.ap.enable", false]
-  - ["wifi.ap.ssid", "mos_??????"]
-  - ["wifi.ap.pass", "1234567890"]
+  - ["wifi.ap.ssid", "YourSSID"]
+  - ["wifi.ap.pass", "YourSecret"]
 
+  ### ->> WIFI STA <-- ###
   - ["wifi.sta.enable", false]
-  - ["wifi.sta.ssid", "your_network_ssid"]
-  - ["wifi.sta.pass", "your_network_secret"]
+  - ["wifi.sta.ssid", "YourSSID"]
+  - ["wifi.sta.pass", "YourSecret"]
 
-  ### ->> DASH <-- ###
-  - ["dash.enable", false]
-  - ["dash.token", "your_dash_token"]
+  ### ->> PPPOS <-- ###
+  #- ["pppos.enable", false]
+  #- ["pppos.uart_no", 1]
+  #- ["pppos.rx_gpio", 26]
+  #- ["pppos.tx_gpio", 27]
+  #- ["pppos.rst_gpio", 5]
+  #- ["pppos.rst_act", 0]
+  #- ["pppos.apn", "your_provider_apn"]
+  #- ["pppos.user", "your_provider_user"]
+  #- ["pppos.pass", "your_provider_secret"]
+
+  ### ->> MDASH <-- ###
+  #- ["dash.enable", false]
+  #- ["dash.token", "your_dash_token"]
+
+  ### ->> SNTP <-- ###
+  #- ["sntp.server", "ntp2.stratum2.ru"]
+  #- ["sys.tz_spec", "MSK-3"]
 
   ### ->> MQTT <-- ###
   #- ["mqtt.enable", false]
@@ -64,6 +116,3 @@ config_schema:
   # -->> also change port for server in mqtt.server section
   #- ["mqtt.ssl_ca_cert","ca.pem"]
   
-  ### ->> SNTP <-- ###
-  #- ["sntp.server", "ntp2.stratum2.ru"]
-  #- ["sys.tz_spec", "MSK-3"]
