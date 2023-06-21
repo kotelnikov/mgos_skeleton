@@ -2,59 +2,74 @@ author: Author Name <your@email.here>
 description: Your App description 
 version: 1.0
 
-libs_version: ${mos.version}
-modules_version: ${mos.version}
-mongoose_os_version: ${mos.version}
+libs_version: 2.20.0
+modules_version: 2.20.0
+mongoose_os_version: 2.20.0
 
-# There is some issues when ESP8266 fails with mJS library using Mongoose OS 2.20.0
-# In this case it's better to use Mongoose OS 2.19.1 (previous release)
+### There are some issues reported for ESP8266 and mJS library using Mongoose OS 2.20.0 (latest release)
+### In this case it's better to use Mongoose OS 2.19.1 (previous release)
+### To use the previous release change the version numbers for libs_version, modules_version and mongoose_os_version as in example below
 #libs_version: 2.19.1
 #modules_version: 2.19.1
 #mongoose_os_version: 2.19.1
 
 manifest_version: 2020-01-29
 
+### A list of free-form string tags, used for internet search purpose
 tags:
   - mgos
   - boilerplate
   - c
   - js
 
-### In case of some extra build variables needed
+### In case of using some extra build variables uncomment section below
 #build_vars:
-  
-  ### In case of some SDK extra variables needed
+
+  ### -->> In case of using some Mongoose OS build variables
+  #MGOS_LWIP_ENABLE_IPV4_NAT: 1
+
+  ### -->> In case of using some SDK variables uncomment below
   #ESP_IDF_SDKCONFIG_OPTS: >
     #${build_vars.ESP_IDF_SDKCONFIG_OPTS}
-      
-      ### In case of an SPIRAM installed on to your MCU
+      ### -->> In case of using an SPIRAM installed on to your MCU (relevant for the ESP32-WROVER)
       #CONFIG_SPIRAM_SUPPORT=y
       #CONFIG_SPIRAM_BOOT_INIT=y
       #CONFIG_SPIRAM_CACHE_WORKAROUND=y
       #CONFIG_SPI_MASTER_IN_IRAM=y
-  
-      ### In case of an extra FLASH installed on to your MCU
-      ### If it's 8Mb FLASH
+      ### ->> In case of an extra FLASH installed on to your MCU
+      ### -->> 8Mb FLASH
       #CONFIG_ESPTOOLPY_FLASHSIZE_4MB=
       #CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
       #CONFIG_ESPTOOLPY_FLASHSIZE=8MB
-
-      ### If it's 16Mb FLASH
+      ### -->> 16Mb FLASH
       #CONFIG_ESPTOOLPY_FLASHSIZE_4MB=
       #CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
       #CONFIG_ESPTOOLPY_FLASHSIZE=16MB
 
+
+### A list of .a libs or directories containing them
+#binary_libs:
+#  - mylib/mylib.a
+
+### In case of using additional preprocessor flags uncomment section below
+#cdefs:
+#  FOO: BAR
+
+### A list of directories with C/C++ or directories with those
 includes:
   - include
 
+### A list of C/C++ source files or directories with those
 sources:
   - src
 
+### A list of files or directories with files to be copied to the device's filesystem
 filesystem:
   - fs
 
+### Library dependencies. Each library should have an location and optionally can have name and version
 libs:
-  ### ->> REMOTE LIBS <-- ###
+  ### --> REMOTE LIBS <-- ###
   - location: https://github.com/mongoose-os-libs/core
   - location: https://github.com/mongoose-os-libs/boards
   - location: https://github.com/mongoose-os-libs/rpc-uart
@@ -62,22 +77,36 @@ libs:
   - location: https://github.com/mongoose-os-libs/rpc-service-fs
   - location: https://github.com/mongoose-os-libs/rpc-service-ota
   - location: https://github.com/mongoose-os-libs/wifi
-  - location: https://github.com/mongoose-os-libs/ca-bundle
+  # ->> If you aren't going to use mJS comment the line below
   - location: https://github.com/mongoose-os-libs/mjs
+  #- location: https://github.com/mongoose-os-libs/ca-bundle
   #- location: https://github.com/mongoose-os-libs/pppos
   #- location: https://github.com/mongoose-os-libs/dash
   #- location: https://github.com/mongoose-os-libs/sntp  
   #- location: https://github.com/mongoose-os-libs/mqtt
 
-  ### ->> LOCAL LIBS <-- ###
+  # ->> By default, the name of the library is equal to the repository name but in some cases it has different name
+  # -->> In this case you have to specify the exact name of the library
+  # --->> As an example for the library "telegram" located at https://github.com/kotelnikov/mgos_telegram the include will looks like below
+  #- location: https://github.com/kotelnikov/mgos_telegram
+  #  name: telegram
+
+  ### --> LOCAL LIBS <-- ###
+  # ->> It is possible to developing and include your own local libraries, this possibility relevant only if you're builds firmware locally
+  # ->> In this case including looks like  specifying the local path for the library 
   #- location: lib-folder/lib-name
 
+### Below defining a new configuration schema for the device 
+### and also override a previously defined configuration entries defined elsewhere (for example in default schema in libraries).
 config_schema:
-  ### ->> APP OBJECT <-- ###
+  # ->> Below defining the developer own config for the application, this can be used in application code
+  # -->> As an advise you can store last state of the application and restore it after reboot
+  ### --> APP OBJECT <-- ###
   - ["app", "o", {title: "Application settings object"}]
-  - ["app.mem_slot", "s", "", {title: "String for storing some JSON data"}]
+  - ["app.mem_slot", "s", "", {title: "The string for storing some data in configuration for using in application"}]
   
-  ### ->> WIFI AP <-- ###
+  # ->> All configuration below is redefining the default configuration options stored in mos.yml's in included libraries
+  ### --> WIFI AP <-- ###
   - ["wifi.ap.enable", false]
   - ["wifi.ap.ssid", "YourSSID"]
   - ["wifi.ap.pass", "YourSecret"]
@@ -87,7 +116,10 @@ config_schema:
   - ["wifi.sta.ssid", "YourSSID"]
   - ["wifi.sta.pass", "YourSecret"]
 
-  ### ->> PPPOS <-- ###
+  ### --> PPPOS <-- ###
+  # ->> If you are going to use PPPOS (internet access through the GSM module) uncomment lines below 
+  # -->> then change gpio settings for you hardware and apn settings
+  # --_>> and also uncomment pppos dependency in libs section
   #- ["pppos.enable", false]
   #- ["pppos.uart_no", 1]
   #- ["pppos.rx_gpio", 26]
@@ -98,21 +130,28 @@ config_schema:
   #- ["pppos.user", "your_provider_user"]
   #- ["pppos.pass", "your_provider_secret"]
 
-  ### ->> MDASH <-- ###
+  ### --> MDASH <-- ###
+  # ->> If you are going to use mDash IoT Cloud uncomment lines below 
+  # -->> and also uncomment dash dependency in libs section
   #- ["dash.enable", false]
   #- ["dash.token", "your_dash_token"]
 
-  ### ->> SNTP <-- ###
-  #- ["sntp.server", "ntp2.stratum2.ru"]
+  ### --> SNTP <-- ###
+  # ->> If you are going to use to use SNTP uncomment lines below 
+  # -->> and also uncomment sntp dependency in libs section
+  #- ["sntp.server", "time.google.com"]
   #- ["sys.tz_spec", "MSK-3"]
 
-  ### ->> MQTT <-- ###
+  ### --> MQTT <-- ###
+  # ->> If you are going to use MQTT uncomment lines below
+  # -->> and also uncomment mqtt dependency in libs section
   #- ["mqtt.enable", false]
   #- ["mqtt.server", "mqtt.eclipse.org:1883"]
   #- ["mqtt.client_id", "your_uniq_mqtt_id"]
   #- ["mqtt.user", "your_mqtt_user"]
   #- ["mqtt.pass", "your_mqtt_secret"]
-  # ->> If you want to use SSL uncomment lines below and 
-  # -->> also change port for server in mqtt.server section
+  # ->> If you are going to use encrypted mqtt connection (using SSL) uncomment lines below 
+  # -->> then change port number for server in mqtt.server option
+  # --_>> and also uncomment ca-bundle dependency in libs section
   #- ["mqtt.ssl_ca_cert","ca.pem"]
   
