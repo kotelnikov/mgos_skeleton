@@ -2,4 +2,6 @@
 
 ## Overview
 
-This is an empty app, serves a skeleton for building Mongoose OS applications. Additional description coming soon...
+This is the blank application, serves a skeleton for building Mongoose OS applications. Please pay attention to the comments given in `mos.yml` file.
+
+If you found this repository useful as a starting point for your Mongoose OS project, please give me a star! ⭐⭐⭐
